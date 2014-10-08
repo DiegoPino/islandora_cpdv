@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+  
+  <xs:element name="word">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="unbounded" ref="spelling"/>
+        <xs:element ref="definition"/>
+        <xs:element ref="etymology"/>
+        <xs:element ref="grammar"/>
+        <xs:element ref="phonetics"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="definition" type="xs:string"/>
+  
+  <xs:element name="etymology" type="xs:string"/>
+  
+  <xs:element name="grammar">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="category"/>
+        <xs:element ref="notes"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="category" type="xs:string"/>
+  <xs:element name="notes" type="xs:string"/>
+  
+  <xs:element name="phonetics">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="spelling"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="spelling">
+    <xs:complexType mixed="true">
+      <xs:attribute name="lang" type="xs:NCName"/>
+      <xs:attribute name="type" type="xs:NCName" use="required" />
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

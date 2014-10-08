@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dsCompositeModel xmlns="info:fedora/fedora-system:def/dsCompositeModel#"> <!-- using this as a guide -->
+    <dsTypeModel ID="DC" >
+        <form FORMAT_URI="http://www.openarchives.org/OAI/2.0/oai_dc/" MIME="text/xml"></form>
+    </dsTypeModel>
+    <dsTypeModel ID="RELS-EXT" optional="true">
+        <form FORMAT_URI="info:fedora/fedora-system:FedoraRELSExt-1.0" MIME="application/rdf+xml"></form>
+    </dsTypeModel>
+    <dsTypeModel ID="RELS-INT" optional="true">
+        <form FORMAT_URI="info:fedora/fedora-system:FedoraRELSInt-1.0" MIME="application/rdf+xml"></form>
+    </dsTypeModel>
+    <dsTypeModel ID="ETHNOGRAPHY" >
+        <form FORMAT_URI="http://cen.umontreal.ca/cpdv/ethnography" MIME="text/xml"/>
+    </dsTypeModel>
+    <dsTypeModel ID="WORD" >
+        <form FORMAT_URI="http://cen.umontreal.ca/cpdv/word" MIME="text/xml"/>
+    </dsTypeModel>
+</dsCompositeModel>
+

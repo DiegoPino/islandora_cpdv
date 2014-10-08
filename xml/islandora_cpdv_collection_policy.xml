@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<collection_policy xmlns="http://www.islandora.ca"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="CPDV collection"
+    xsi:schemaLocation="http://www.islandora.ca http://syn.lib.umanitoba.ca/collection_policy.xsd">
+    <content_models>
+        <content_model dsid="ISLANDORACM" name="New Text"
+            namespace="islandora:collection" pid="cpdv:textCModel"/>
+        <content_model dsid="ISLANDORACM" name="New Association"
+            namespace="islandora:collection" pid="cpdv:associationCModel"/>
+        <content_model dsid="ISLANDORACM" name="New Person"
+            namespace="islandora:collection" pid="cpdv:personCModel"/>
+        <content_model dsid="ISLANDORACM" name="New Word"
+            namespace="islandora:collection" pid="cpdv:wordCModel"/>
+    </content_models>
+    <search_terms/>
+    <staging_area/>
+    <relationship>isMemberOfCollection</relationship>
+</collection_policy>

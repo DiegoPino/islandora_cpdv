@@ -1,0 +1,269 @@
+<?php
+
+/**
+ * @file
+ * Modify the main page only for testing
+ */
+
+/**
+ * Implements hook_node_view()
+ */
+function demo_node_view($node, $view_mode, $langcode) {
+  $node->content['demo_field'] = array(
+    '#type' => 'markup',
+    '#markup' => t('The Kaingang Culture'),
+    '#prefix' => '<h1>',
+    '#suffix' => '</h1>',
+    '#weight' => -6
+  );
+
+  $module_path = drupal_get_path('module', 'cpdv');
+
+  $image01 = array(
+    'path' => $module_path . '/images/Main.jpg',
+    'alt' => t('Kaingang colors'),
+    'title' => t('Kaingang colors')
+  );
+
+  $node->content['themed_data'] = array(
+    '#type' => 'markup',
+    '#markup' => theme('image', $image01),
+    '#weight' => -10
+  );
+
+  $image02 = array(
+    'path' => $module_path . '/images/Bannerk5.jpg',
+    'alt' => t('Kaingang colors'),
+    'title' => t('Kaingang colors')
+  );
+
+  $node->content['image'] = array(
+    '#type' => 'markup',
+    '#markup' => theme('image', $image02),
+    '#weight' => -12
+  );
+
+  $node->content['paragraph'] = array(
+    '#type' => 'markup',
+    '#markup' => '<p> </p>',
+    '#weight' => -8
+  );
+
+  $lang = $node->language;
+
+  $content = $node->content['body'][0]['#markup'];
+
+  $content .= '<p> Contenu de test !!!!! </p>';
+
+  $node->content['body'][0]['#markup'] = $content;
+
+  // krumo($node);
+
+  return $node;
+}
+
+/**
+ * Implements hook_islandora_required_objects().
+ */
+function islandora_cpdv_islandora_required_objects(IslandoraTuque $connection) {
+
+  // Audio Content Model
+  $audio_content_model = $connection->repository->constuctObject('cpdv:audioCModel');
+  $audio_content_model->owner = 'fedoraAdmin';
+  $audio_content_model->label = 'CPDV Audio Content Model';
+  $audio_content_model->models = 'fedora-system:ContentModel-3.0';
+  // DS-COMPOSITE-MODEL Datastream.
+  islandora_cpdv_ingest_ds_composite_datastream($audio_content_model, 'audio');
+
+  // Video Content Model
+  $video_content_model = $connection->repository->constuctObject('cpdv:videoCModel');
+  $video_content_model->owner = 'fedoraAdmin';
+  $video_content_model->label = 'CPDV Video Content Model';
+  $video_content_model->models = 'fedora-system:ContentModel-3.0';
+  // DS-COMPOSITE-MODEL Datastream.
+  islandora_cpdv_ingest_ds_composite_datastream($video_content_model, 'video');
+
+  // Image Content Model
+  $image_content_model = $connection->repository->constuctObject('cpdv:imageCModel');
+  $image_content_model->owner = 'fedoraAdmin';
+  $image_content_model->label = 'CPDV Image Content Model';
+  $image_content_model->models = 'fedora-system:ContentModel-3.0';
+  // DS-COMPOSITE-MODEL Datastream.
+  islandora_cpdv_ingest_ds_composite_datastream($image_content_model, 'image');
+
+  // Text Content Model
+  $text_content_model = $connection->repository->constuctObject('cpdv:textCModel');
+  $text_content_model->owner = 'fedoraAdmin';
+  $text_content_model->label = 'CPDV Text Content Model';
+  $text_content_model->models = 'fedora-system:ContentModel-3.0';
+  // DS-COMPOSITE-MODEL Datastream.
+  islandora_cpdv_ingest_ds_composite_datastream($text_content_model, 'text');
+
+  // Association Content Model
+  $association_content_model = $connection->repository->constuctObject('cpdv:associationCModel');
+  $association_content_model->owner = 'fedoraAdmin';
+  $association_content_model->label = 'CPDV association Content Model';
+  $association_content_model->models = 'fedora-system:ContentModel-3.0';
+  // DS-COMPOSITE-MODEL Datastream.
+  islandora_cpdv_ingest_ds_composite_datastream($association_content_model, 'association');
+
+  // Word Content Model
+  $word_content_model = $connection->repository->constuctObject('cpdv:wordCModel');
+  $word_content_model->owner = 'fedoraAdmin';
+  $word_content_model->label = 'CPDV Word Content Model';
+  $word_content_model->models = 'fedora-system:ContentModel-3.0';
+  // DS-COMPOSITE-MODEL Datastream.
+  islandora_cpdv_ingest_ds_composite_datastream($word_content_model, 'word');
+
+  // Person Content Model
+  $person_content_model = $connection->repository->constuctObject('cpdv:personCModel');
+  $person_content_model->owner = 'fedoraAdmin';
+  $person_content_model->label = 'CPDV Person Content Model';
+  $person_content_model->models = 'fedora-system:ContentModel-3.0';
+  // DS-COMPOSITE-MODEL Datastream.
+  islandora_cpdv_ingest_ds_composite_datastream($person_content_model, 'person');
+
+  // cpdv Collection.
+  $cpdv_collection = $connection->repository->constructObject('cpdv:cpdv_collection');
+  $cpdv_collection->owner = 'fedoraAdmin';
+  $cpdv_collection->label = 'CPDV Collection';
+  $cpdv_collection->models = 'islandora:collectionCModel';
+  $cpdv_collection->relationships->add(FEDORA_RELS_EXT_URI, 'isMemberOfCollection', 'islandora:root');
+
+  // Collection Policy Datastream.
+  $module_path = drupal_get_path('module', 'islandora_cpdv');
+  $datastream = $cpdv_collection->constructDatastream('COLLECTION_POLICY', 'X');
+  $datastream->label = 'Collection policy';
+  $datastream->mimetype = 'text/xml';
+  $datastream->setContentFromFile("$module_path/xml/forms/islandora_cpdv_collection_policy.xml", FALSE);
+  $cpdv_collection->ingestDatastream($datastream);
+
+  // TN Datastream.
+  // $datastream = $cpdv_collection->constructDatastream('TN', 'M');
+  // $datastream->label = 'Thumbnail';
+  // $datastream->mimetype = 'image/png';
+  // $datastream->setContentFromFile("$module_path/images/folder.png", FALSE);
+  // $cpdv_collection->ingestDatastream($datastream);
+
+  return array(
+    'islandora_cpdv' => array(
+      'title' => 'Islandora CPDV',
+      'objects' => array(
+        $audio_content_model,
+        $video_content_model,
+        $image_content_model,
+        $text_content_model,
+        $association_content_model,
+        $word_content_model,
+        $person_content_model,
+        $cpdv_collection,
+      ),
+    ),
+  );
+}
+
+/**
+ * This function will add an entity DS composite datastream to an object.
+ *
+ * @param AbstractObject $islandora_object
+ *                 The object to add the DS composite datastream to.
+ * @param $cm
+ *                The content model
+ *
+ */
+function islandora_cpdv_ingest_ds_composite_datastream(AbstractObject $islandora_object, $cm) {
+  $module_path = drupal_get_path('module', 'islandora_cpdv');
+
+  $ds_composite_datastream = $islandora_object->constructDatastream('DS-COMPOSITE-MODEL', 'X');
+  $ds_composite_datastream->label = 'DS-COMPOSITE-MODEL';
+  $ds_composite_datastream->mimetype = 'text/xml';
+  $ds_composite_datastream->setContentFromFile("$module_path/xml/forms/islandora_cpdv_{$cm}_ds_composite_model.xml", FALSE);
+  $islandora_object->ingestDatastream($ds_composite_datastream);
+}
+
+/**
+ * Implements hook_islandora_xml_form_builder_forms().
+ */
+function islandora_entities_islandora_xml_form_builder_forms() {
+  $module_path = drupal_get_path('module', 'islandora_cpdv');
+  return array(
+    'Ethnography form' => array(
+      'form_file' => "$module_path/xml/forms/islandora_cpdv_ethnography_form.xml",
+    ),
+    'Association form' => array(
+      'form_file' => "$module_path/xml/forms/islandora_cpdv_association_form.xml",
+    ),
+    'Text form' => array(
+      'form_file' => "$module_path/xml/forms/islandora_cpdv_text_form.xml",
+    ),
+    'Word form' => array(
+      'form_file' => "$module_path/xml/forms/islandora_cpdv_word_form.xml",
+    ),
+    'Person form' => array(
+      'form_file' => "$module_path/xml/forms/islandora_cpdv_person_form.xml",
+    ),
+  );
+}
+
+/**
+ * Implements hook_islandora_content_model_forms_form_associations().
+ */
+function islandora_cpdv_islandora_content_model_forms_form_associations() {
+  return array(
+    'islandora_cpdv_ethnography_form' => array(
+      'content_model' => 'cpdv:audioCModel',
+      'form_name' => 'Ethnography form',
+      'dsid' => 'ETHNOGRAPHY',
+      'title_field' => array('community', 'nation'),
+//      'transform' => '',
+      'template' => FALSE,
+    ),
+    'islandora_cpdv_association_form' => array(
+      'content_model' => 'cpdv:associationCModel',
+      'form_name' => 'Association form',
+      'dsid' => 'ASSOCIATION',
+      'title_field' => array('community', 'nation'),
+      'transform' => '',
+      'template' => FALSE,
+    ),
+    'islandora_cpdv_person_form' => array(
+      'content_model' => 'cpdv:personCModel',
+      'form_name' => 'Person form',
+      'dsid' => 'PERSON',
+      'title_field' => array('identifiation', 'firstName', 'lastName'),
+      'transform' => 'person2dc_cpdv.xsl',
+      'template' => FALSE,
+    ),
+    'islandora_cpdv_text_form' => array(
+      'content_model' => 'cpdv:textCModel',
+      'form_name' => 'Text form',
+      'dsid' => 'TEXT',
+      'title_field' => array('identifiation', 'title'),
+      'transform' => 'text2dc_cpdv.xsl',
+      'template' => FALSE,
+    ),
+    'islandora_cpdv_word_form' => array(
+      'content_model' => 'cpdv:wordCModel',
+      'form_name' => 'Word form',
+      'dsid' => 'WORD',
+      'title_field' => array('spelling'),
+      'transform' => 'word2dc_redbiodiversidad.xsl',
+      'template' => FALSE,
+    ),
+  );
+}
+
+/**
+ * Implements hook_islandora_ingest_steps().
+ */
+function islandora_cpdv_islandora_sp_audiocmodel_islandora_ingest_steps() {
+  return array(
+    'islandora_cpdv_audio_upload' => array(
+      'weight' => 10,
+      'type' => 'form',
+      'form_id' => 'islandora_audio_audio_upload_form',
+      'module' => 'islandora_audio',
+      'file' => 'includes/audio_upload.form.inc',
+    ),
+  );
+}
