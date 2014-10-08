@@ -36,7 +36,7 @@
                     <multiple>FALSE</multiple>
                     <required>TRUE</required>
                     <resizable>FALSE</resizable>
-                    <title>Communauté </title>
+                    <title>Community - Communauté - Comunade</title>
                     <tree>TRUE</tree>
                     <actions>
                         <create>
@@ -69,9 +69,9 @@
                             <disabled>FALSE</disabled>
                             <executes_submit_callback>FALSE</executes_submit_callback>
                             <multiple>FALSE</multiple>
-                            <default_value>kaingang</default_value>
                             <options>
-                                <index key="kaingang">Kaingang</index>  <!-- TODO: Preselectionner Kaingang -->
+                                <index key="">Selectionnez une nation...</index>  <!-- TODO: Preselectionner Kaingang -->
+                                <kaingang>Kaingang</kaingang>
                             </options>
                             <default_value>Kaingang</default_value>
                             <required>TRUE</required>
@@ -238,12 +238,13 @@
                                     <disabled>FALSE</disabled>
                                     <executes_submit_callback>FALSE</executes_submit_callback>
                                     <description>La langue dans laquelle se fait la description</description>
-                                    <default_value>fre</default_value>
+                                    <default_value>Francais</default_value>
                                     <options>
-                                        <index key="fre">Francais</index> <!-- Comment changer la valeur pour son code ISO ? -->
-                                        <index key="eng">English</index>
-                                        <index key="por">Português</index>
-                                        <index key="esp">Español</index>
+                                        <index key="">Selectionnez une langue...</index>
+                                        <fre>Francais</fre> <!-- Comment changer la valeur pour son code ISO ? -->
+                                        <eng>English</eng>
+                                        <por>Português</por>
+                                        <esp>Español</esp>
                                     </options>
                                     <multiple>FALSE</multiple>
                                     <required>TRUE</required>
@@ -563,10 +564,10 @@
                                             <disabled>FALSE</disabled>
                                             <executes_submit_callback>FALSE</executes_submit_callback>
                                             <multiple>FALSE</multiple>
-                                            <default_value>person</default_value>
                                             <options>
-                                                <index key="person">Personne</index> 
-                                                <index key="corporation">Corporation</index>
+                                                <index key=""></index>  <!-- TODO: Preselectionner Kaingang -->
+                                                <person>Personne</person>
+                                                <corporate>Corporation</corporate>
                                             </options>
                                             <required>TRUE</required>
                                             <resizable>FALSE</resizable>
@@ -632,7 +633,7 @@
                                                     <tree>TRUE</tree>
                                                     <actions>
                                                         <create>
-                                                            <path>self::node()</path>
+                                                            <path>firstName</path>
                                                             <context>parent</context>
                                                             <schema/>
                                                             <type>element</type>
@@ -670,10 +671,10 @@
                                                     <tree>TRUE</tree>
                                                     <actions>
                                                         <create>
-                                                            <path>self::node()</path>
+                                                            <path>lastName</path>
                                                             <context>parent</context>
                                                             <schema/>
-                                                            <type>element</type>
+                                                            <type>xml</type>
                                                             <prefix>NULL</prefix>
                                                             <value>lastName</value>
                                                         </create>
@@ -710,7 +711,7 @@
                                             <tree>TRUE</tree>
                                             <actions>
                                                 <create>
-                                                    <path>self::node()</path>
+                                                    <path>corporate</path>
                                                     <context>parent</context>
                                                     <schema/>
                                                     <type>element</type>
