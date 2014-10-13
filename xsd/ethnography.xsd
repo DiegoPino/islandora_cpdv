@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+  <xs:element name="ethnography">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="community"/>
+        <xs:element maxOccurs="unbounded" ref="descriptionGroup"/>
+        <xs:element ref="copyright"/>
+        <xs:element ref="license"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="community">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="nation"/>
+        <xs:element ref="reserve"/>
+        <xs:element ref="village"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="nation" type="xs:NCName"/>
+  <xs:element name="reserve" type="xs:NCName"/>
+  <xs:element name="village" type="xs:NCName"/>
+  <xs:element name="descriptionGroup">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="description"/>
+        <xs:element ref="contextOfUse"/>
+        <xs:element ref="representation"/>
+        <xs:element ref="date"/>
+      </xs:sequence>
+      <xs:attribute name="lang" use="required" type="xs:NCName"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="description" type="xs:string"/>
+  <xs:element name="contextOfUse" type="xs:string"/>
+  <xs:element name="representation" type="xs:string"/>
+  <xs:element name="date" type="xs:string"/>
+  <xs:element name="copyright">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="notice"/>
+        <xs:element ref="year"/>
+        <xs:element ref="rightsHolder"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="year" type="xs:integer"/>
+  <xs:element name="rightsHolder">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="unbounded" ref="person"/>
+        <xs:element maxOccurs="unbounded" ref="corporate"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="person">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="firstName"/>
+        <xs:element ref="lastName"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="firstName" type="xs:NCName"/>
+  <xs:element name="lastName" type="xs:NCName"/>
+  <xs:element name="corporate" type="xs:string"/>
+  <xs:element name="license">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="link"/>
+        <xs:element ref="notice"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="link">
+    <xs:complexType>
+      <xs:attribute name="href" use="required" type="xs:anyURI"/>
+      <xs:attribute name="rel" use="required" type="xs:NCName"/>
+      <xs:attribute name="type" use="required"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="notice" type="xs:string"/>
+</xs:schema>

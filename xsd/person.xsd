@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+  <xs:element name="person">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="identification"/>
+        <xs:element maxOccurs="unbounded" ref="descriptionGroup"/>
+        <xs:element maxOccurs="unbounded" ref="affiliation"/>
+        <xs:element ref="contact"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="identification">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="firstName"/>
+        <xs:element ref="lastName"/>
+        <xs:element ref="altName"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="firstName" type="xs:string"/>
+  <xs:element name="lastName" type="xs:string"/>
+  <xs:element name="altName">
+    <xs:complexType>
+      <xs:attribute name="lang" use="required" type="xs:NCName"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="descriptionGroup">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="summary"/>
+        <xs:element ref="metier"/>
+      </xs:sequence>
+      <xs:attribute name="lang" use="required" type="xs:NCName"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="summary" type="xs:string"/>
+  <xs:element name="metier" type="xs:NCName"/>
+  <xs:element name="affiliation">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="role"/>
+        <xs:element ref="organization"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="role" type="xs:NCName"/>
+  <xs:element name="organization" type="xs:string"/>
+  <xs:element name="contact">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="email"/>
+        <xs:element ref="address"/>
+        <xs:element ref="phone"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="email" type="xs:string"/>
+  <xs:element name="address">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="streetAddress"/>
+        <xs:element ref="extendedAddress"/>
+        <xs:element ref="city"/>
+        <xs:element ref="state"/>
+        <xs:element ref="postalCode"/>
+        <xs:element ref="country"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="streetAddress" type="xs:string"/>
+  <xs:element name="extendedAddress">
+    <xs:complexType/>
+  </xs:element>
+  <xs:element name="city" type="xs:NCName"/>
+  <xs:element name="state" type="xs:string"/>
+  <xs:element name="postalCode" type="xs:integer"/>
+  <xs:element name="country" type="xs:NCName"/>
+  <xs:element name="phone" type="xs:NMTOKEN"/>
+</xs:schema>
