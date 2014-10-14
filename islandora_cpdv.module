@@ -216,7 +216,7 @@ function islandora_cpdv_islandora_content_model_forms_form_associations() {
       'form_name' => 'Ethnography form',
       'dsid' => 'ETHNOGRAPHY',
       'title_field' => array('community', 'nation'),
-//      'transform' => '',
+      'transform' => '',
       'template' => FALSE,
     ),
     'islandora_cpdv_association_form' => array(
@@ -257,7 +257,7 @@ function islandora_cpdv_islandora_content_model_forms_form_associations() {
 /**
  * Implements hook_islandora_ingest_steps().
  */
-function islandora_cpdv_islandora_sp_audiocmodel_islandora_ingest_steps() {
+function islandora_cpdv_cpdv_audioCModel_islandora_ingest_steps() {
   return array(
     'islandora_cpdv_audio_upload' => array(
       'weight' => 10,
