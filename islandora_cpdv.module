@@ -66,9 +66,10 @@ function demo_node_view($node, $view_mode, $langcode) {
  * Implements hook_islandora_required_objects().
  */
 function islandora_cpdv_islandora_required_objects(IslandoraTuque $connection) {
-
+  
+  $module_path = drupal_get_path('module', 'islandora_cpdv');
   // Audio Content Model
-  $audio_content_model = $connection->repository->constuctObject('cpdv:audioCModel');
+  $audio_content_model = $connection->repository->constructObject('cpdv:audioCModel');
   $audio_content_model->owner = 'fedoraAdmin';
   $audio_content_model->label = 'CPDV Audio Content Model';
   $audio_content_model->models = 'fedora-system:ContentModel-3.0';
@@ -76,7 +77,7 @@ function islandora_cpdv_islandora_required_objects(IslandoraTuque $connection) {
   islandora_cpdv_ingest_ds_composite_datastream($audio_content_model, 'audio');
 
   // Video Content Model
-  $video_content_model = $connection->repository->constuctObject('cpdv:videoCModel');
+  $video_content_model = $connection->repository->constructObject('cpdv:videoCModel');
   $video_content_model->owner = 'fedoraAdmin';
   $video_content_model->label = 'CPDV Video Content Model';
   $video_content_model->models = 'fedora-system:ContentModel-3.0';
@@ -84,7 +85,7 @@ function islandora_cpdv_islandora_required_objects(IslandoraTuque $connection) {
   islandora_cpdv_ingest_ds_composite_datastream($video_content_model, 'video');
 
   // Image Content Model
-  $image_content_model = $connection->repository->constuctObject('cpdv:imageCModel');
+  $image_content_model = $connection->repository->constructObject('cpdv:imageCModel');
   $image_content_model->owner = 'fedoraAdmin';
   $image_content_model->label = 'CPDV Image Content Model';
   $image_content_model->models = 'fedora-system:ContentModel-3.0';
@@ -92,7 +93,7 @@ function islandora_cpdv_islandora_required_objects(IslandoraTuque $connection) {
   islandora_cpdv_ingest_ds_composite_datastream($image_content_model, 'image');
 
   // Text Content Model
-  $text_content_model = $connection->repository->constuctObject('cpdv:textCModel');
+  $text_content_model = $connection->repository->constructObject('cpdv:textCModel');
   $text_content_model->owner = 'fedoraAdmin';
   $text_content_model->label = 'CPDV Text Content Model';
   $text_content_model->models = 'fedora-system:ContentModel-3.0';
@@ -100,7 +101,7 @@ function islandora_cpdv_islandora_required_objects(IslandoraTuque $connection) {
   islandora_cpdv_ingest_ds_composite_datastream($text_content_model, 'text');
 
   // Association Content Model
-  $association_content_model = $connection->repository->constuctObject('cpdv:associationCModel');
+  $association_content_model = $connection->repository->constructObject('cpdv:associationCModel');
   $association_content_model->owner = 'fedoraAdmin';
   $association_content_model->label = 'CPDV association Content Model';
   $association_content_model->models = 'fedora-system:ContentModel-3.0';
@@ -108,7 +109,7 @@ function islandora_cpdv_islandora_required_objects(IslandoraTuque $connection) {
   islandora_cpdv_ingest_ds_composite_datastream($association_content_model, 'association');
 
   // Word Content Model
-  $word_content_model = $connection->repository->constuctObject('cpdv:wordCModel');
+  $word_content_model = $connection->repository->constructObject('cpdv:wordCModel');
   $word_content_model->owner = 'fedoraAdmin';
   $word_content_model->label = 'CPDV Word Content Model';
   $word_content_model->models = 'fedora-system:ContentModel-3.0';
@@ -116,7 +117,7 @@ function islandora_cpdv_islandora_required_objects(IslandoraTuque $connection) {
   islandora_cpdv_ingest_ds_composite_datastream($word_content_model, 'word');
 
   // Person Content Model
-  $person_content_model = $connection->repository->constuctObject('cpdv:personCModel');
+  $person_content_model = $connection->repository->constructObject('cpdv:personCModel');
   $person_content_model->owner = 'fedoraAdmin';
   $person_content_model->label = 'CPDV Person Content Model';
   $person_content_model->models = 'fedora-system:ContentModel-3.0';
@@ -131,11 +132,11 @@ function islandora_cpdv_islandora_required_objects(IslandoraTuque $connection) {
   $cpdv_collection->relationships->add(FEDORA_RELS_EXT_URI, 'isMemberOfCollection', 'islandora:root');
 
   // Collection Policy Datastream.
-  $module_path = drupal_get_path('module', 'islandora_cpdv');
+  
   $datastream = $cpdv_collection->constructDatastream('COLLECTION_POLICY', 'X');
   $datastream->label = 'Collection policy';
   $datastream->mimetype = 'text/xml';
-  $datastream->setContentFromFile("$module_path/xml/forms/islandora_cpdv_collection_policy.xml", FALSE);
+  $datastream->setContentFromFile("$module_path/xml/islandora_cpdv_collection_policy.xml", FALSE);
   $cpdv_collection->ingestDatastream($datastream);
 
   // TN Datastream.
@@ -177,14 +178,14 @@ function islandora_cpdv_ingest_ds_composite_datastream(AbstractObject $islandora
   $ds_composite_datastream = $islandora_object->constructDatastream('DS-COMPOSITE-MODEL', 'X');
   $ds_composite_datastream->label = 'DS-COMPOSITE-MODEL';
   $ds_composite_datastream->mimetype = 'text/xml';
-  $ds_composite_datastream->setContentFromFile("$module_path/xml/forms/islandora_cpdv_{$cm}_ds_composite_model.xml", FALSE);
+  $ds_composite_datastream->setContentFromFile("$module_path/xml/islandora_cpdv_{$cm}_ds_composite_model.xml", FALSE);
   $islandora_object->ingestDatastream($ds_composite_datastream);
 }
 
 /**
  * Implements hook_islandora_xml_form_builder_forms().
  */
-function islandora_entities_islandora_xml_form_builder_forms() {
+function islandora_cpdv_islandora_xml_form_builder_forms() {
   $module_path = drupal_get_path('module', 'islandora_cpdv');
   return array(
     'Ethnography form' => array(

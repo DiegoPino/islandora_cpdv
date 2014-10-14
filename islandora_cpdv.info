@@ -1,4 +1,7 @@
 name = CyberPointDeVue
 description = Custom module for the CyberPointDeVue project
 core = 7.x
+dependencies[] = islandora
+dependencies[] = islandora_basic_collection
+dependencies[] = islandora_audio
 package = CPDV
