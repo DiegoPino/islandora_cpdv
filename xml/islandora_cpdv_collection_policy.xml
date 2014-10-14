@@ -11,6 +11,8 @@
             namespace="islandora:collection" pid="cpdv:personCModel"/>
         <content_model dsid="ISLANDORACM" name="New Word"
             namespace="islandora:collection" pid="cpdv:wordCModel"/>
+	     <content_model dsid="cpdv" name="New CPDV Audio"
+	            namespace="islandora:collection" pid="cpdv:audioCModel"/>
     </content_models>
     <search_terms/>
     <staging_area/>
