@@ -764,7 +764,7 @@
 							<value>&lt;link rel="licence" href="%value%" /&gt;</value>
 						</create>
 						<read>
-							<path>/ethnography/license/link</path>
+							<path>/ethnography/license/link/@href</path>
 							<context>document</context>
 						</read>
 						<update>
