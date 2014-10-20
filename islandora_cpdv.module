@@ -1,66 +1,11 @@
 <?php
 
-/**
- * @file
- * Modify the main page only for testing
- */
 
-/**
- * Implements hook_node_view()
- */
-function demo_node_view($node, $view_mode, $langcode) {
-  $node->content['demo_field'] = array(
-    '#type' => 'markup',
-    '#markup' => t('The Kaingang Culture'),
-    '#prefix' => '<h1>',
-    '#suffix' => '</h1>',
-    '#weight' => -6
-  );
-
-  $module_path = drupal_get_path('module', 'cpdv');
-
-  $image01 = array(
-    'path' => $module_path . '/images/Main.jpg',
-    'alt' => t('Kaingang colors'),
-    'title' => t('Kaingang colors')
-  );
-
-  $node->content['themed_data'] = array(
-    '#type' => 'markup',
-    '#markup' => theme('image', $image01),
-    '#weight' => -10
-  );
-
-  $image02 = array(
-    'path' => $module_path . '/images/Bannerk5.jpg',
-    'alt' => t('Kaingang colors'),
-    'title' => t('Kaingang colors')
-  );
-
-  $node->content['image'] = array(
-    '#type' => 'markup',
-    '#markup' => theme('image', $image02),
-    '#weight' => -12
-  );
-
-  $node->content['paragraph'] = array(
-    '#type' => 'markup',
-    '#markup' => '<p> </p>',
-    '#weight' => -8
-  );
-
-  $lang = $node->language;
-
-  $content = $node->content['body'][0]['#markup'];
-
-  $content .= '<p> Contenu de test !!!!! </p>';
-
-  $node->content['body'][0]['#markup'] = $content;
-
-  // krumo($node);
-
-  return $node;
+function islandora_cpdv_get_external_form_get_associations(array $cmodel, array $dsid) {
+  module_load_include('inc', 'xml_form_builder', 'includes/associations');
+  return xml_form_builder_get_associations(array(), $cmodel, $dsid);
 }
+
 
 /**
  * Implements hook_islandora_required_objects().
@@ -186,6 +131,7 @@ function islandora_cpdv_ingest_ds_composite_datastream(AbstractObject $islandora
  * Implements hook_islandora_xml_form_builder_forms().
  */
 function islandora_cpdv_islandora_xml_form_builder_forms() {
+  	
   $module_path = drupal_get_path('module', 'islandora_cpdv');
   return array(
     'Ethnography form' => array(
@@ -210,8 +156,18 @@ function islandora_cpdv_islandora_xml_form_builder_forms() {
  * Implements hook_islandora_content_model_forms_form_associations().
  */
 function islandora_cpdv_islandora_content_model_forms_form_associations() {
-  return array(
-    'islandora_cpdv_ethnography_form' => array(
+	
+  
+    return array(
+    'islandora_cpdv_audio_mods_form' => array(
+      'content_model' => 'cpdv:audioCModel',
+      'form_name' => 'Audio MODS form',
+      'dsid' => 'MODS',
+      'title_field' => array('titleInfo', 'title'),
+      'transform' => 'mods_to_dc.xsl',
+      'template' => FALSE,
+    ),
+	'islandora_cpdv_ethnography_form' => array(
       'content_model' => 'cpdv:audioCModel',
       'form_name' => 'Ethnography form',
       'dsid' => 'ETHNOGRAPHY',
@@ -258,6 +214,16 @@ function islandora_cpdv_islandora_content_model_forms_form_associations() {
  * Implements hook_islandora_ingest_steps().
  */
 function islandora_cpdv_cpdv_audioCModel_islandora_ingest_steps() {
+	//This are the args we are passing as metadatastep to our custom ingest form
+	$islandora_cpdv_ethnography_form = array(
+      'content_model' => 'cpdv:audioCModel',
+      'form_name' => 'Ethnography form',
+      'dsid' => 'ETHNOGRAPHY',
+      'title_field' => array('community', 'nation'),
+      'transform' => '',
+      'template' => FALSE,
+	  'id'=> 'islandora_cpdv_ethnography_form',	
+	  );
   return array(
     'islandora_cpdv_audio_upload' => array(
       'weight' => 10,
@@ -266,5 +232,134 @@ function islandora_cpdv_cpdv_audioCModel_islandora_ingest_steps() {
       'module' => 'islandora_audio',
       'file' => 'includes/audio_upload.form.inc',
     ),
+    'islandora_cpdv_audio_ethnography' => array(
+      'weight' => 6,
+      'type' => 'form',
+      'form_id' => 'islandora_cpdv_xml_form_builder_additional_ingest_form',
+      'module' => 'islandora_cpdv',
+      'file' => 'includes/ingest.form.inc',
+      'args' => array($islandora_cpdv_ethnography_form),
+    ),
   );
 }
+  /**
+   * Implements hook_islandora_ingest_steps_alter().
+  */
+ function islandora_cpdv_cpdv_audioCModel_islandora_ingest_steps_alter(array &$steps, array &$form_state) {
+	
+     $select_association_form_step = !empty($steps['xml_form_builder_association_step']);
+	 $step_storage = &islandora_ingest_form_get_step_storage($form_state, 'xml_form_builder_association_step');
+     if ($select_association_form_step) {
+ 		//Means XML_form_builder is trying to give us a choice which metadataform we want to use
+ 		//In case we already defined one of this Forms in our ingestion steps we must deactivate this options to avoid duplicates
+		//or at least remove the already present as additional ingest step 
+		//First we iterate over those steps who have an ['args'] key. If present, Those are the additional metadatasteps.
+		$form_steps = islandora_ingest_form_get_form_steps($form_state); //Filter the ingest steps to only steps of type 'form'.
+		if (count($form_steps) > 1)//If we get only one,then that form is for sure the metadata_ingest_step
+			{
+			$form_step_filter_onlywith_args = function($o) 
+				{
+	      	  	return array_key_exists('args' ,$o );
+				};
+		
+	   		 $form_steps_args= array_filter($form_steps, $form_step_filter_onlywith_args);
+			 $removeKeys=array('xml_form_builder_association_step','xml_form_builder_metadata_step');
+			 $user_steps_args=array_diff_key($form_steps_args, array_flip($removeKeys));//Lets keep only those forms defined as ingest_steps by the user that have and args argument
+			 foreach($form_steps_args['xml_form_builder_association_step']['args'][0] as $forms => &$formargs)//Interate over the association_step args
+				{
+				foreach($user_steps_args as $userFormStep => $userFormStepDef)
+					{
+					if ($formargs['id']==$userFormStepDef['args'][0]['id'])
+						{
+						unset($form_steps_args['xml_form_builder_association_step']['args'][0][$forms]);	
+						}
+					}		
+				
+				}
+				//Now $form_steps_args['xml_form_builder_association_step']['args'][0] has only those forms that are defined for this CMODEL but are not present as additional ingest steps.
+				//Count how many we have
+		        if (count($form_steps_args['xml_form_builder_association_step']['args'][0])<=1)//If we have 1 or less then this form is not longer needed
+					{
+						unset($steps['xml_form_builder_association_step']);
+					
+					}
+				}
+	   
+        }
+  }
+  /**
+   * Implements hook_form_FORM_ID_alter().
+   * Alters the metadata edit form, in case we are dealing with a secondary stream and we don´t want to modify the Object's label (default)
+  */ 
+ function islandora_cpdv_form_xml_form_builder_edit_datastream_form_alter(array &$form, array &$form_state, $form_id)
+ {
+     
+	
+	 //here we don't have steps, but we need to know if the datastream to edit is main metadata stream or a secondary added to the ingest steps as custom metadata
+	 //so we need to implement our own steps-search-evaluate function and do the same as the above function to evaluate what to do.
+	 module_load_include('inc', 'islandora', 'includes/ingest.form');
+     $other_steps=islandora_cpdv_get_other_form_steps($form_state);
+	
+	 
+	 foreach($other_steps as $step=>$values)
+	 	{
+	 	   if ($values['args'][0]['id']==$form_state['association']['id'])
+		   	 {
+				 form_load_include($form_state, 'inc', 'islandora_cpdv', 'includes/ingest.form');
+			     $title_field_parents = $form_state['association']['title_field'];
+			     $title_field_parents[] = '#required';
+			     $title_field = drupal_array_set_nested_value($form, $title_field_parents, TRUE);
+     
+				 $form['update'] = array(
+			       '#type' => 'submit',
+			       '#value' => t('Update'),
+			       '#name' => 'update',
+			       '#submit' => array('islandora_cpdv_xml_form_builder_additional_edit_datastream_form_metadata_form_submit'),
+			     );
+				 break 1;
+			}
+	   }
+	
+ 	
+     	 	 	 	
+ }
+ 
+ 
+ function islandora_cpdv_get_other_form_steps($form_state) {
+   module_load_include('inc', 'islandora', 'includes/utilities');
+   $steps = &drupal_static(__FUNCTION__);
+   if (isset($steps)) {
+     return $steps;
+   }
+   $steps = array();
+   if (!empty($form_state['association']))
+   		{
+   		foreach (islandora_build_hook_list(ISLANDORA_INGEST_STEP_HOOK, array($form_state['association']['content_model'])) as $hook) {
+     
+     foreach (module_implements($hook) as $module) {
+       $function = $module . '_' . $hook;
+       $module_steps = (array) $function($form_state);
+       $steps = array_merge($steps, $module_steps);
+     }
+   }
+   $steps = array_filter($steps);
+   $form_step_filter = function($o) {
+	   return (($o['type'] == 'form') && (array_key_exists('args',$o)))?count($o['args']):false;
+	 
+   };
+   $steps = array_filter($steps, $form_step_filter);
+   //$steps should now contain only form steps that have and args array 
+   foreach (islandora_build_hook_list(ISLANDORA_INGEST_STEP_HOOK,  array($form_state['association']['content_model'])) as $hook) {
+     drupal_alter($hook, $steps, $form_state);
+   }
+   // Add any defaults.
+   foreach ($steps as $key => &$step) { 
+	 $step['id'] = $key;
+   }
+   uasort($steps, 'drupal_sort_weight');
+}
+   return $steps;
+ 
+}
+ 
+  
