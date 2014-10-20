@@ -9,7 +9,7 @@
 /**
  * Implements hook_install().
  */
-function islandora_cdpv_install() {
+function islandora_cpdv_install() {
   module_load_include('inc', 'islandora', 'includes/solution_packs');
   islandora_install_solution_pack('islandora_cdpv');
 }
@@ -17,7 +17,7 @@ function islandora_cdpv_install() {
 /**
  * Implements hook_uninstall().
  */
-function islandora_cdpv_uninstall() {
+function islandora_cpdv_uninstall() {
   module_load_include('inc', 'islandora', 'includes/solution_packs');
   islandora_install_solution_pack('islandora_cdpv', 'uninstall');
  }
