@@ -236,11 +236,11 @@
                                     <executes_submit_callback>FALSE</executes_submit_callback>
                                     <description>La langue dans laquelle se fait la description</description>
                                     <options>
-                                        <index key="">Selectionnez une langue...</index>
-                                        <fre>Francais</fre> <!-- Comment changer la valeur pour son code ISO ? -->
-                                        <eng>English</eng>
-                                        <por>Português</por>
-                                        <esp>Español</esp>
+                                        <option key="">Selectionnez une langue...</option>
+                                        <option key="fre">Francais</option> <!-- Comment changer la valeur pour son code ISO ? -->
+                                        <option key="eng">English</option>
+                                        <option key="por">Português</option>
+                                        <option key="esp">Español</option>
                                     </options>
                                     <multiple>FALSE</multiple>
                                     <required>TRUE</required>
@@ -800,8 +800,8 @@
                                     <access>TRUE</access>
                                     <default_value>br</default_value>
                                     <options>
-                                        <index key="br">Brésil</index>
-                                        <index key="ca">Canada</index>
+                                        <option key="br">Brésil</option>
+                                        <option key="ca">Canada</option>
                                     </options>
                                     <collapsed>FALSE</collapsed>
                                     <collapsible>FALSE</collapsible>
@@ -885,7 +885,7 @@
                                     <multiple>FALSE</multiple>
                                     <default_value>kaingang</default_value>
                                     <options>
-                                        <index key="kaingang">Kaingang</index> 
+                                        <option key="kaingang">Kaingang</option> 
                                     </options>
                                     <default_value>kaingang</default_value>
                                     <required>TRUE</required>
@@ -925,9 +925,9 @@
                                     <executes_submit_callback>FALSE</executes_submit_callback>
                                     <multiple>FALSE</multiple>
                                     <options>
-                                        <index key="">Selectionnez une reserve...</index>
-                                        <reserve_a>reserve_a</reserve_a>
-                                        <reserve_b>reserve_b</reserve_b>
+                                        <option key="">Selectionnez une reserve...</option>
+                                        <option key="reserve_a">reserve_a</option>
+                                        <option key="reserve_b">reserve_b</option>
                                     </options>
                                     <required>FALSE</required>
                                     <resizable>FALSE</resizable>
