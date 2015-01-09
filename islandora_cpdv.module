@@ -196,7 +196,7 @@ function islandora_cpdv_islandora_content_model_forms_form_associations() {
       'content_model' => 'cpdv:personCModel',
       'form_name' => 'Person form',
       'dsid' => 'PERSON',
-      'title_field' => array('identifiation', 'firstName', 'lastName'),
+      'title_field' => array('identifiation', 'firstName'),
       'transform' => 'person2dc_cpdv.xsl',
       'template' => FALSE,
     ),
